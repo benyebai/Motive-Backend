@@ -1,0 +1,64 @@
+# === Python ===
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# === Virtual Environment ===
+env/
+venv/
+ENV/
+.venv/
+.ENV/
+
+# === Environment Variables ===
+.env
+.env.*
+
+# === Django ===
+*.sqlite3
+*.log
+
+# Ignore Django migration pyc files and caches
+**/migrations/*.pyc
+**/migrations/__pycache__/
+
+# Optional: Uncomment the following to ignore all migrations if you plan to generate them fresh
+# **/migrations/*.py
+
+# === Coverage / Testing ===
+.coverage
+.tox/
+.nox/
+.cache/
+.pytest_cache/
+htmlcov/
+
+# === Pip / Build artifacts ===
+*.egg
+*.egg-info/
+dist/
+build/
+pip-wheel-metadata/
+*.whl
+
+# === Jupyter Notebook Checkpoints ===
+.ipynb_checkpoints/
+
+# === OS Files ===
+.DS_Store
+Thumbs.db
+
+# === Editors / IDEs ===
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# === Node (optional, if you ever use JS frontend) ===
+node_modules/
+
+# === Docker (optional) ===
+.docker/

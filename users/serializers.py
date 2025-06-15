@@ -1,0 +1,32 @@
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework import serializers
+from .models import FriendRequest, Friendship
+
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        return {
+            'token': data['access']
+        }
+
+class FriendRequestSerializer(serializers.ModelSerializer):
+    # read only just means, only use this when its sent out to the client
+    # ignore it if the user sends it
+    from_user_username = serializers.CharField(source='from_user.username', read_only=True)
+
+    class Meta:
+        model = FriendRequest
+        fields = ['id', 'from_user', 'to_user', 'timestamp', 'from_user_username']
+
+class FriendshipSerializer(serializers.ModelSerializer):
+    friend_username = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Friendship
+        fields = ['id', 'friend_username', 'created_at']
+
+    def get_friend_username(self, obj):
+        request_user = self.context['request'].user
+        if obj.user1 == request_user:
+            return obj.user2.username
+        return obj.user1.username
