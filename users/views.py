@@ -4,11 +4,12 @@ from rest_framework import generics, status
 from rest_framework.response import Response
 from django.db.models import Q
 
-from .models import FriendRequest, Friendship
+from .models import FriendRequest, Friendship, HangoutEvent
 from .serializers import (
     CustomTokenObtainPairSerializer,
     FriendRequestSerializer,
-    FriendshipSerializer
+    FriendshipSerializer,
+    HangoutEventSerializer
 )
 
 # ✅ Custom login view
@@ -56,3 +57,32 @@ class FriendsListView(generics.ListAPIView):
     def get_queryset(self):
         user = self.request.user
         return Friendship.objects.filter(Q(user1=user) | Q(user2=user))
+
+# ✅ Get hangout events (user's own and friends')
+class HangoutEventListView(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = HangoutEventSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        # Get user's friends
+        friendships = Friendship.objects.filter(Q(user1=user) | Q(user2=user))
+        friend_ids = []
+        for friendship in friendships:
+            if friendship.user1 == user:
+                friend_ids.append(friendship.user2.id)
+            else:
+                friend_ids.append(friendship.user1.id)
+        
+        # Return events created by user or their friends
+        return HangoutEvent.objects.filter(
+            Q(created_by=user) | Q(created_by__id__in=friend_ids)
+        ).order_by('-created_at')
+
+# ✅ Create hangout event
+class CreateHangoutEventView(generics.CreateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = HangoutEventSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(created_by=self.request.user)

@@ -31,3 +31,14 @@ class FriendRequest(models.Model):
     def __str__(self):
         return f"{self.from_user.username} → {self.to_user.username} (Accepted: {self.accepted})"
 
+class HangoutEvent(models.Model):
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    attendee_count = models.IntegerField()
+    date_time = models.DateTimeField()
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_events')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.title} by {self.created_by.username}"
+

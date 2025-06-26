@@ -1,6 +1,6 @@
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
-from .models import FriendRequest, Friendship
+from .models import FriendRequest, Friendship, HangoutEvent
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
@@ -30,3 +30,11 @@ class FriendshipSerializer(serializers.ModelSerializer):
         if obj.user1 == request_user:
             return obj.user2.username
         return obj.user1.username
+
+class HangoutEventSerializer(serializers.ModelSerializer):
+    created_by = serializers.CharField(source='created_by.username', read_only=True)
+
+    class Meta:
+        model = HangoutEvent
+        fields = ['id', 'title', 'description', 'attendee_count', 'date_time', 'created_by', 'created_at']
+        read_only_fields = ['created_by', 'created_at']

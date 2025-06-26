@@ -4,7 +4,9 @@ from .views import (
     SendFriendRequestView,
     PendingFriendRequestsView,
     AcceptFriendRequestView,
-    FriendsListView
+    FriendsListView,
+    HangoutEventListView,
+    CreateHangoutEventView
 )
 
 urlpatterns = [
@@ -13,4 +15,6 @@ urlpatterns = [
     path('api/friend-request/pending/', PendingFriendRequestsView.as_view(), name='pending-friend-requests'),
     path('api/friend-request/<int:pk>/accept/', AcceptFriendRequestView.as_view(), name='accept-friend-request'),
     path('api/friends/', FriendsListView.as_view(), name='friend-list'),
+    path('api/hangouts/', HangoutEventListView.as_view(), name='hangout-list'),
+    path('api/hangouts/create/', CreateHangoutEventView.as_view(), name='create-hangout'),
 ]
