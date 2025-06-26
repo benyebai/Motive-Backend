@@ -17,6 +17,7 @@ class FriendRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = FriendRequest
         fields = ['id', 'from_user', 'to_user', 'timestamp', 'from_user_username']
+        read_only_fields = ['from_user', 'timestamp', 'to_user']
 
 class FriendshipSerializer(serializers.ModelSerializer):
     friend_username = serializers.SerializerMethodField()
@@ -33,8 +34,10 @@ class FriendshipSerializer(serializers.ModelSerializer):
 
 class HangoutEventSerializer(serializers.ModelSerializer):
     created_by = serializers.CharField(source='created_by.username', read_only=True)
+    date_time = serializers.DateTimeField(format='%Y-%m-%dT%H:%M:%S.%fZ')
+    created_at = serializers.DateTimeField(format='%Y-%m-%dT%H:%M:%S.%fZ', read_only=True)
 
     class Meta:
         model = HangoutEvent
         fields = ['id', 'title', 'description', 'attendee_count', 'date_time', 'created_by', 'created_at']
-        read_only_fields = ['created_by', 'created_at']
+        read_only_fields = ['id', 'created_by', 'created_at']
